@@ -1,0 +1,19 @@
+{
+    "name": "baoziyo/think-auth",
+    "description": "Auth For Thinkphp5",
+    "license": "BSD-3-Clause",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "baoziyo"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "think\\auth\\": "src/"
+        }
+    }
+}
