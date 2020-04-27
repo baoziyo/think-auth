@@ -1,4 +1,7 @@
 # 编辑器
-/.idea
-/.vscode
+.idea
+.vscode
 .DS_Store
+runtime
+.php_cs.cache
+.php_cs.dist
