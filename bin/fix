@@ -1,0 +1,49 @@
+#! /bin/bash
+echo '------------------------------------------------------------>'
+echo '### mkdir -p runtime/bin'
+mkdir -p runtime/bin
+
+
+echo '### git status --untracked-files -s >> runtime/bin/php-cs-fixer-problems'
+rm -f runtime/bin/php-cs-fixer-problems
+git status --untracked-files -s >> runtime/bin/php-cs-fixer-problems
+cat runtime/bin/php-cs-fixer-problems
+
+echo '### 自动修复规范问题'
+while read line
+do
+    ## 校验的文件
+    ##  D app/autoload.php  -- 删除, 不检查
+    ##  M bin/fix    -- 修改
+    ## ?? tests/Unit/Task/Job/Test.php      -- 新增
+    ## ?? tests/Unit/Task/JobTest/Test.php  -- 新增
+    ignoreStartLines=' D';  ## 以 空格 + D 开头的，不检查
+
+    if [ ${line:0:2} != $ignoreStartLines ]; then
+        i=1
+        fixedClass=''
+        while((1==1))
+        do
+            split=`echo $line|cut -d " " -f$i`  ## 以空格分割
+            if [ "$split" != "" ]; then
+                fixedClass="${split}"  # 取最后一个空格的后面的内容
+            else
+                break
+            fi
+            ((i++))
+        done
+
+         if [[ $fixedClass = *\.php* ]]; then
+            if [[ ${fixedClass:0:6} != 'vendor' ]];then
+                if [[ ${fixedClass:0:8} != 'thinkphp' ]];then
+                echo 'php-cs-fixer fix '$fixedClass
+                php-cs-fixer fix $fixedClass
+                fi
+            fi
+        fi
+    fi
+done < runtime/bin/php-cs-fixer-problems
+
+rm runtime/bin/php-cs-fixer-problems
+echo '### 结束'
+echo '<------------------------------------------------------------'
